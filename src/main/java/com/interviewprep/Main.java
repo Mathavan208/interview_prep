@@ -1,6 +1,5 @@
 package com.interviewprep;
 
-import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
@@ -16,6 +15,9 @@ public class Main {
         Tomcat tomcat = new Tomcat();
         tomcat.setPort(Integer.parseInt(port));
         
+        // THE CRITICAL FIX: Set the address to bind to all interfaces
+        tomcat.setHostname("0.0.0.0");
+        
         String webappDirLocation = "src/main/webapp/";
         StandardContext ctx = (StandardContext) tomcat.addWebapp("", new File(webappDirLocation).getAbsolutePath());
         
@@ -24,18 +26,16 @@ public class Main {
         resources.addPreResources(new DirResourceSet(resources, "/WEB-INF/classes", additionWebInfClasses.getAbsolutePath(), "/"));
         ctx.setResources(resources);
         
-        System.out.println("Starting Tomcat server...");
+        System.out.println("Starting Tomcat server on host 0.0.0.0, port " + port + "...");
         
         tomcat.start();
         
         // Wait for the server to be fully started
-        // This loop checks if the server state is STARTED
         while (tomcat.getServer().getState() != org.apache.catalina.LifecycleState.STARTED) {
             Thread.sleep(1000);
         }
         
-        System.out.println("Server started on port " + port);
-        System.out.println("Application is ready to accept requests.");
+        System.out.println("Server started and is ready to accept requests.");
         
         tomcat.getServer().await();
     }
