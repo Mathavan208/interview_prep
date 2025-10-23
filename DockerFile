@@ -16,6 +16,9 @@ RUN mvn clean package -DskipTests
 # Stage 2: Create the final runtime image
 FROM openjdk:11-jre-slim
 
+# Install curl for the health check
+RUN apt-get update && apt-get install -y curl && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy the compiled classes from the build stage
@@ -30,6 +33,9 @@ COPY --from=build /app/target/dependency ./target/dependency
 # Expose the port Render expects
 EXPOSE 10000
 
+# A more robust health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:10000/login.jsp || exit 1
+
 # The command to run the application with the correct classpath
-# The classpath MUST include your classes AND all the dependency JARs
 CMD ["java", "-cp", "target/classes:target/dependency/*", "com.interviewprep.Main"]

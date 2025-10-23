@@ -1,5 +1,6 @@
 package com.interviewprep;
 
+import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.startup.Tomcat;
@@ -23,8 +24,19 @@ public class Main {
         resources.addPreResources(new DirResourceSet(resources, "/WEB-INF/classes", additionWebInfClasses.getAbsolutePath(), "/"));
         ctx.setResources(resources);
         
+        System.out.println("Starting Tomcat server...");
+        
         tomcat.start();
+        
+        // Wait for the server to be fully started
+        // This loop checks if the server state is STARTED
+        while (tomcat.getServer().getState() != org.apache.catalina.LifecycleState.STARTED) {
+            Thread.sleep(1000);
+        }
+        
         System.out.println("Server started on port " + port);
+        System.out.println("Application is ready to accept requests.");
+        
         tomcat.getServer().await();
     }
 }
