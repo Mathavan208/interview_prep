@@ -12,6 +12,7 @@ com\interviewprep\servlet\ProblemServlet.class
 com\interviewprep\model\Problem.class
 com\interviewprep\servlet\LoginServlet.class
 com\interviewprep\servlet\LogoutServlet.class
+com\interviewprep\Main.class
 com\interviewprep\servlet\DashboardServlet.class
 com\interviewprep\servlet\TopicServlet.class
 com\interviewprep\servlet\RegisterServlet.class
