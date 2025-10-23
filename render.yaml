@@ -1,0 +1,32 @@
+services:
+  # Java Web Service using Docker
+  - type: web
+    name: interview-prep-tracker
+    env: docker  # Specify that we're using Docker
+    plan: free
+    # Docker specific settings
+    dockerContext: . # The build context is the root directory
+    dockerfilePath: ./Dockerfile # Path to the Dockerfile
+    
+    envVars:
+      # These will be automatically populated by Render from the database
+      - key: DATABASE_URL
+        fromDatabase:
+          name: interview-prep-db
+          property: connectionString
+      - key: DATABASE_USERNAME
+        fromDatabase:
+          name: interview-prep-db
+          property: user
+      - key: DATABASE_PASSWORD
+        fromDatabase:
+          name: interview-prep-db
+          property: password
+
+  # PostgreSQL Database
+  - type: pserv
+    name: interview-prep-db
+    env: mysql # We'll still use MySQL syntax in our Java code
+    plan: free
+    databaseName: interview_prep_db_rwf1
+    user: interview_prep_db_rwf1_user
