@@ -31,7 +31,7 @@ COPY --from=build /app/src/main/webapp ./src/main/webapp
 COPY --from=build /app/target/dependency ./target/dependency
 
 # Expose the port Render expects
-EXPOSE 10000
+EXPOSE 8080
 
 # A more robust health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
